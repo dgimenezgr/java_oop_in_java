@@ -76,7 +76,7 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
-		//earthquakesURL = "test1.atom";
+		earthquakesURL = "test1.atom";
 		//earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
@@ -170,9 +170,11 @@ public class EarthquakeCityMap extends PApplet {
 		// If isInCountry ever returns true, isLand should return true.
 		for (Marker m : countryMarkers) {
 			// TODO: Finish this method using the helper method isInCountry
-			
+			if (isInCountry(earthquake,m)) {
+				earthquake.addProperty("country", m.getProperty("country"));
+				return true;				
+			}
 		}
-		
 		
 		// not inside any country
 		return false;
@@ -197,7 +199,16 @@ public class EarthquakeCityMap extends PApplet {
 		//     	and (2) if it is on land, that its country property matches 
 		//      the name property of the country marker.   If so, increment
 		//      the country's counter.
-		
+
+		for (Marker cm : countryMarkers) {
+			int quakeCounter = 0;
+			
+			for (Marker quakeMarker : quakeMarkers) {
+				
+				
+			}
+		}
+
 		// Here is some code you will find useful:
 		// 
 		//  * To get the name of a country from a country marker in variable cm, use:
