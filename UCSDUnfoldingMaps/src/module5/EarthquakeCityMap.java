@@ -14,8 +14,6 @@ import de.fhpotsdam.unfolding.marker.MultiMarker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.utils.MapUtils;
-import module6.CommonMarker;
-import module6.EarthquakeMarker;
 import parsing.ParseFeed;
 import processing.core.PApplet;
 
@@ -61,8 +59,8 @@ public class EarthquakeCityMap extends PApplet {
 	private List<Marker> countryMarkers;
 	
 	// NEW IN MODULE 5
-	private CommonMarker lastSelected;
-	private CommonMarker lastClicked;
+	private module5.CommonMarker lastSelected;
+	private module5.CommonMarker lastClicked;
 	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
@@ -152,11 +150,10 @@ public class EarthquakeCityMap extends PApplet {
 			return;
 		}
 		
-		for (Marker m : markers) 
-		{
-			CommonMarker marker = (CommonMarker)m;
-			if (marker.isInside(map,  mouseX, mouseY)) {
-				lastSelected = marker;
+		for (Marker m : markers) {
+			CommonMarker marker = (CommonMarker) m;
+			if (marker.isInside(map, mouseX, mouseY)) {
+				CommonMarker lastSelected = marker;
 				marker.setSelected(true);
 				return;
 			}
@@ -194,7 +191,7 @@ public class EarthquakeCityMap extends PApplet {
 		// Loop over the earthquake markers to see if one of them is selected
 		for (Marker marker : cityMarkers) {
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
-				lastClicked = (CommonMarker)marker;
+				lastClicked = (CommonMarker) marker;
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : cityMarkers) {
 					if (mhide != lastClicked) {
@@ -220,9 +217,9 @@ public class EarthquakeCityMap extends PApplet {
 		if (lastClicked != null) return;
 		// Loop over the earthquake markers to see if one of them is selected
 		for (Marker m : quakeMarkers) {
-			EarthquakeMarker marker = (EarthquakeMarker)m;
+			module5.EarthquakeMarker marker = (module5.EarthquakeMarker)m;
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
-				lastClicked = marker;
+				module5.EarthquakeMarker lastClicked = marker;
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : quakeMarkers) {
 					if (mhide != lastClicked) {

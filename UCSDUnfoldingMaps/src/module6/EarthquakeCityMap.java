@@ -2,6 +2,7 @@ package module6;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -36,7 +37,7 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = false;
+	private static final boolean offline = true;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -82,7 +83,7 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+		earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
 		//earthquakesURL = "quiz2.atom";
@@ -114,9 +115,12 @@ public class EarthquakeCityMap extends PApplet {
 		    quakeMarkers.add(new OceanQuakeMarker(feature));
 		  }
 	    }
-
+	    
+	    // Add sortAndPrint to setup()
+	    sortAndPrint(5);
+	    
 	    // could be used for debugging
-	    printQuakes();
+	    //printQuakes();
 	 		
 	    // (3) Add markers to map
 	    //     NOTE: Country markers are not added to the map.  They are used
@@ -409,5 +413,24 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		return false;
 	}
+
+    // sortAndPrint: add and implement
+    private void sortAndPrint(int numToPrint) {
+    	int maxPrint = numToPrint;
+    	
+    	if (quakeMarkers.size() < numToPrint) {
+    		maxPrint = quakeMarkers.size();
+    	}
+    	
+    	Object[] quakeMarkersArr = quakeMarkers.toArray();
+    	Arrays.sort(quakeMarkersArr, Collections.reverseOrder());
+    	
+    	System.out.println(maxPrint + " maximum magnitude quakes (Magnitude - location, country):");
+    	for (int k = 0; k < maxPrint; k++) {
+    		System.out.println(quakeMarkersArr[k]);
+    	}
+    	
+    	
+    }
 
 }
