@@ -83,10 +83,10 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		earthquakesURL = "test2.atom";
+		//earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
-		//earthquakesURL = "quiz2.atom";
+		earthquakesURL = "quiz2.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -117,7 +117,7 @@ public class EarthquakeCityMap extends PApplet {
 	    }
 	    
 	    // Add sortAndPrint to setup()
-	    sortAndPrint(5);
+	    sortAndPrint(1000);
 	    
 	    // could be used for debugging
 	    //printQuakes();
@@ -136,7 +136,7 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
-		
+		addInfoPopup();
 	}
 	
 	
@@ -195,6 +195,7 @@ public class EarthquakeCityMap extends PApplet {
 		else if (lastClicked == null) 
 		{
 			checkEarthquakesForClick();
+			
 			if (lastClicked == null) {
 				checkCitiesForClick();
 			}
@@ -210,6 +211,10 @@ public class EarthquakeCityMap extends PApplet {
 		for (Marker marker : cityMarkers) {
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
 				lastClicked = (CommonMarker)marker;
+				
+				int quakeCounter = 0;
+				float quakeTotalM = 0;
+				
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : cityMarkers) {
 					if (mhide != lastClicked) {
@@ -221,10 +226,31 @@ public class EarthquakeCityMap extends PApplet {
 					if (quakeMarker.getDistanceTo(marker.getLocation()) 
 							> quakeMarker.threatCircle()) {
 						quakeMarker.setHidden(true);
+					} else {
+						float quakeMagnitude = quakeMarker.getMagnitude();
+						quakeTotalM += quakeMagnitude;
+						quakeCounter++;
 					}
 				}
+
+				float meanMagnitude = quakeTotalM/quakeCounter;
+
+				String riskLevel = "LOW";
+				if (quakeCounter > 0 && meanMagnitude > 5) {
+					riskLevel = "MEDIUM";
+				} else if (quakeCounter > 1 && meanMagnitude > 5.5) {
+					riskLevel = "HIGH";
+				}
+				
+				marker.setProperty("quakeCounter", quakeCounter);
+				marker.setProperty("meanMagnitude", meanMagnitude);
+				marker.setProperty("riskLevel", riskLevel);
+				
 				return;
 			}
+			
+			
+			
 		}		
 	}
 	
@@ -326,10 +352,47 @@ public class EarthquakeCityMap extends PApplet {
 		strokeWeight(2);
 		line(centerx-8, centery-8, centerx+8, centery+8);
 		line(centerx-8, centery+8, centerx+8, centery-8);
-		
-		
 	}
 
+	// helper method to draw key in GUI
+	private void addInfoPopup() {	
+
+		// Remember you can use Processing's graphics methods here
+		fill(255, 250, 240);
+		
+		int xbase = 25;
+		int ybase = 325;
+		
+		rect(xbase, ybase, 150, 275);
+		
+		fill(0);
+
+		fill(0, 0, 0);
+		textAlign(LEFT, CENTER);
+		text("City: ", xbase + 20, ybase+20);
+		text("Country: ", xbase + 20, ybase+70);
+		text("Quakes: ", xbase+20, ybase+120);
+		text("Mean Mag: ", xbase+20, ybase+170);
+		text("Risk level: ", xbase+20, ybase+220);
+		
+		if (lastClicked != null) {
+			Marker marker = lastClicked;
+			if (marker.getProperty("name") != null) {
+				String name = marker.getProperty("name") != null ? marker.getProperty("name").toString() : "N/A";
+				String country = marker.getProperty("country") != null ? marker.getProperty("country").toString() : "N/A";
+				String quakeCounter = marker.getProperty("quakeCounter").toString() != null && !marker.getProperty("quakeCounter").toString().equals(0) ? marker.getProperty("quakeCounter").toString() : "N/A";
+				String meanMagnitude = marker.getProperty("meanMagnitude").toString() != null ? marker.getProperty("meanMagnitude").toString() : "N/A";
+				String riskLevel = marker.getProperty("riskLevel").toString() != null ? marker.getProperty("riskLevel").toString() : "N/A";
+				
+				text(name, xbase+35, ybase+40);
+				text(country, xbase+35, ybase+90);
+				text(quakeCounter, xbase+35, ybase+140);
+				text(meanMagnitude, xbase+35, ybase+190);
+				text(riskLevel, xbase+35, ybase+240);
+			}
+		}
+	}
+	
 	
 	
 	// Checks whether this quake occurred on land.  If it did, it sets the 
