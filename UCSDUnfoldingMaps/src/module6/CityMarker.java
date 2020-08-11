@@ -1,10 +1,17 @@
 package module6;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.geo.Location;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.core.PImage;
 
 /** Implements a visual marker for cities on an earthquake map
  * 
@@ -13,6 +20,8 @@ import processing.core.PGraphics;
  */
 public class CityMarker extends CommonMarker {
 	
+	PImage icon;
+
 	public static int TRI_SIZE = 5;  // The size of the triangle marker
 	
 	public CityMarker(Location location) {

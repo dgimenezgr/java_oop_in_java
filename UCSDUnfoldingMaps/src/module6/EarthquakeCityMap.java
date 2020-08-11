@@ -214,6 +214,7 @@ public class EarthquakeCityMap extends PApplet {
 				
 				int quakeCounter = 0;
 				float quakeTotalM = 0;
+				String quakeAge = "Past Month";
 				
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : cityMarkers) {
@@ -228,23 +229,14 @@ public class EarthquakeCityMap extends PApplet {
 						quakeMarker.setHidden(true);
 					} else {
 						float quakeMagnitude = quakeMarker.getMagnitude();
+ 
+						quakeAge = getMostRecentAge(mhide, quakeAge);
 						quakeTotalM += quakeMagnitude;
 						quakeCounter++;
 					}
 				}
 
-				float meanMagnitude = quakeTotalM/quakeCounter;
-
-				String riskLevel = "LOW";
-				if (quakeCounter > 0 && meanMagnitude > 5) {
-					riskLevel = "MEDIUM";
-				} else if (quakeCounter > 1 && meanMagnitude > 5.5) {
-					riskLevel = "HIGH";
-				}
-				
-				marker.setProperty("quakeCounter", quakeCounter);
-				marker.setProperty("meanMagnitude", meanMagnitude);
-				marker.setProperty("riskLevel", riskLevel);
+				cityAddInfo(marker, quakeCounter, quakeTotalM, quakeAge);
 				
 				return;
 			}
@@ -252,6 +244,36 @@ public class EarthquakeCityMap extends PApplet {
 			
 			
 		}		
+	}
+	
+	private String getMostRecentAge(Marker earthquake, String quakeAge) {
+		
+		String currAge = earthquake.getProperty("age").toString();
+		
+		if (quakeAge.equals("Past Month") && ((currAge.equals("Past Week") || currAge.equals("Past Day")))) {
+			quakeAge = currAge;
+		} else if ((quakeAge.equals("Past Month") || quakeAge.equals("Past Week")) && currAge.equals("Past Day")) {
+			quakeAge = currAge;
+		}
+				
+		return quakeAge;
+	}
+	
+	// Helper method to encapsulate city info adding for city legend
+	private void cityAddInfo(Marker city, int quakeCounter, float quakeTotalM, String quakeAge) {
+		float meanMagnitude = quakeTotalM/quakeCounter;
+
+		String riskLevel = "LOW";
+		if (quakeCounter > 0 && meanMagnitude > 5) {
+			riskLevel = "MEDIUM";
+		} else if (quakeCounter > 1 && meanMagnitude > 5.5) {
+			riskLevel = "HIGH";
+		}
+				
+		city.setProperty("quakeCounter", quakeCounter);
+		city.setProperty("meanMagnitude", meanMagnitude);
+		city.setProperty("mostRecentQuake", quakeAge);
+		city.setProperty("riskLevel", riskLevel);
 	}
 	
 	// Helper method that will check if an earthquake marker was clicked on
@@ -363,7 +385,7 @@ public class EarthquakeCityMap extends PApplet {
 		int xbase = 25;
 		int ybase = 325;
 		
-		rect(xbase, ybase, 150, 275);
+		rect(xbase, ybase, 150, 320);
 		
 		fill(0);
 
@@ -374,6 +396,7 @@ public class EarthquakeCityMap extends PApplet {
 		text("Quakes: ", xbase+20, ybase+120);
 		text("Mean Mag: ", xbase+20, ybase+170);
 		text("Risk level: ", xbase+20, ybase+220);
+		text("Most recent: ", xbase+20, ybase+270);
 		
 		if (lastClicked != null) {
 			Marker marker = lastClicked;
@@ -383,12 +406,14 @@ public class EarthquakeCityMap extends PApplet {
 				String quakeCounter = marker.getProperty("quakeCounter").toString() != null && !marker.getProperty("quakeCounter").toString().equals(0) ? marker.getProperty("quakeCounter").toString() : "N/A";
 				String meanMagnitude = marker.getProperty("meanMagnitude").toString() != null ? marker.getProperty("meanMagnitude").toString() : "N/A";
 				String riskLevel = marker.getProperty("riskLevel").toString() != null ? marker.getProperty("riskLevel").toString() : "N/A";
+				String mostRecentQuake = marker.getProperty("mostRecentQuake").toString() != null ? marker.getProperty("mostRecentQuake").toString() : "N/A";
 				
 				text(name, xbase+35, ybase+40);
 				text(country, xbase+35, ybase+90);
 				text(quakeCounter, xbase+35, ybase+140);
 				text(meanMagnitude, xbase+35, ybase+190);
 				text(riskLevel, xbase+35, ybase+240);
+				text(mostRecentQuake, xbase+35, ybase+290);
 			}
 		}
 	}
