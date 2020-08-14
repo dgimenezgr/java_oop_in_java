@@ -63,8 +63,6 @@ public class MyLinkedListTester {
 		}
 		
 		// test short list, first contents, then out of bounds
-		assertEquals("Check first", "A", shortList.get(0));
-		assertEquals("Check second", "B", shortList.get(1));
 		
 		try {
 			shortList.get(-1);
@@ -73,6 +71,12 @@ public class MyLinkedListTester {
 		catch (IndexOutOfBoundsException e) {
 		
 		}
+
+		String testA = shortList.get(0).toString();
+		String testB = shortList.get(1).toString();
+		assertEquals("Check first", "A", testA);
+		assertEquals("Check second", "B", testB);
+
 		try {
 			shortList.get(2);
 			fail("Check out of bounds");
@@ -109,11 +113,42 @@ public class MyLinkedListTester {
 	@Test
 	public void testRemove()
 	{
+		//test empty list, get should throw an exception
+		try {
+			emptyList.remove(0);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+			
+		}
+
 		int a = list1.remove(0);
 		assertEquals("Remove: check a is correct ", 65, a);
 		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
 		assertEquals("Remove: check size is correct ", 2, list1.size());
 		
+		try {
+			shortList.remove(3);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+		
+		// test off the end of the longer array
+		try {
+			longerList.remove(-1);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+		try {
+			longerList.remove(LONG_LIST_LENGTH+1);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
 		// TODO: Add more tests here
 	}
 	
@@ -123,8 +158,10 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddEnd()
 	{
-        // TODO: implement this test
-		
+		// TODO: implement this test
+		// test short list, first contents, then out of bounds
+		assertEquals("Check first", "A", shortList.get(0));
+		assertEquals("Check second", "B", shortList.get(1));
 	}
 
 	
@@ -133,6 +170,8 @@ public class MyLinkedListTester {
 	public void testSize()
 	{
 		// TODO: implement this test
+			assertEquals("Test size: if equal to 2, OK ", 2, shortList.size());
+			assertEquals("Test size: if equal to 10, OK ", 10, longerList.size());
 	}
 
 	
@@ -144,16 +183,92 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddAtIndex()
 	{
+		//test empty list, get should throw an exception
+		try {
+			emptyList.add(1, 3);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+			
+		}
+
         // TODO: implement this test
+		shortList.add(1, "C");
 		
-	}
+		assertEquals("Check first", "C", shortList.get(1));
+		assertEquals("Check second", "B", shortList.get(2));
+		assertEquals("Check second", 3, shortList.size());		
+		
+		shortList.add(1, "D");
+
+		assertEquals("Check first", "D", shortList.get(1));
+		assertEquals("Check second", "C", shortList.get(2));
+		assertEquals("Check second", 4, shortList.size());		
+		
+		try {
+			shortList.add(5, "C");
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+		
+		// test off the end of the longer array
+		try {
+			longerList.add(-1, 3);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+		try {
+			longerList.add(LONG_LIST_LENGTH+1, 4);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+}
 	
 	/** Test setting an element in the list */
 	@Test
 	public void testSet()
 	{
+		//test empty list, get should throw an exception
+		try {
+			emptyList.set(1, 3);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+			
+		}
+
 	    // TODO: implement this test
-	    
+		shortList.set(0, "C");
+		
+		assertEquals("Check first", "C", shortList.get(0));
+
+		try {
+			shortList.set(5, "C");
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+		
+		// test off the end of the longer array
+		try {
+			longerList.set(-1, 3);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+		try {
+			longerList.set(LONG_LIST_LENGTH+1, 4);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
 	}
 	
 	
