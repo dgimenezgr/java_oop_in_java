@@ -1,7 +1,6 @@
 package textgen;
 
 import java.util.AbstractList;
-import java.util.Iterator;
 
 
 /** A class that implements a doubly linked list
@@ -18,10 +17,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
-		head = new LLNode<E>(null);
-		tail = new LLNode<E>(null);
-		head.next = tail;
-		tail.prev = head;
+		head = null;
+		tail = null;
 		size = 0;
 	}
 
@@ -31,41 +28,33 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public boolean add(E element ) 
 	{
-		LLNode<E> n = new LLNode<E>(element);
+        if (element == null) {
+            throw new NullPointerException();
+        }
+
+        LLNode<E> n = new LLNode<E>(element);
 		
 		// TODO: Implement this method
-		try {
-			n.next = tail.prev.next;
-			n.prev = tail.prev;
-			tail.prev.next = n;
-			tail.prev = n;
-			size++;
-			return true;
-		} catch(Exception e) {
-			System.out.println(e);
-		}
-		return false;
+        if (size != 0) {
+            tail.next = n;
+            n.prev = tail;
+            tail = n;
+        	
+        } else {
+        	head = n;
+        	tail = n;
+        }
+
+        size++;
+		return true;
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
 	public E get(int index) 
 	{
-		LLNode<E> fn = head;
-		
-		// TODO: Implement this method.
-		if (index < 0 || index >= size) {
-			throw new IndexOutOfBoundsException();
-		}
-			
-		if (index <= size && index >= 0) {			
-	        for (int i = 0; i <= index; i++) {
-	        	fn = fn.next;
-	        }
-		}
-		
-		return fn.data;
-		
+		// Encapsulation of method. Not only does this help keep code coherency, but it avoids the bad practice of only getting the data attribute when getting a single node
+		return getAt(index).data;		
 	}
 
 	/**
@@ -76,31 +65,32 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public void add(int index, E element ) 
 	{
 		// TODO: Implement this method
-		try {
-			LLNode<E> n = new LLNode<E>(element);
-
-			LLNode<E> fn = head;
-
-			
-			if (index < 0 || index >= size) {
-				throw new IndexOutOfBoundsException();
-			}
-
-			if (index <= size && index >= 0) {			
-		        for (int i = 0; i <= index; i++) {
-	        		fn = fn.next;
-
-    				if (i == index) {
-    					n.next = fn;
-    					n.prev = fn.prev;
-    					fn.prev.next = n;
-    					fn.prev = n;
-    					size++;
-		        	}
-		        }
-			}
-		} catch(Exception e) {
+		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
+		}
+
+		if (element == null) {
+            throw new NullPointerException();
+        }
+		
+		// Two behaviors. If the list is not empty, run first condition. If it  is, run second.
+		if (size > 0 && index < size) {
+			
+            LLNode<E> thisNode = getAt(index);
+            
+            // Intercalate new node just before old thisNode and after thisNode.prev
+            LLNode<E> newNode = new LLNode<>(thisNode.prev, thisNode, element);
+            
+            if (thisNode.prev != null) {
+            	thisNode.prev.next = newNode;
+            } else {
+                head = thisNode;
+            }
+            thisNode.prev = newNode;
+            size++;
+			
+		} else {
+            add(element);
 		}
 	}
 
@@ -121,37 +111,22 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
-		LLNode<E> fn = head;
+		LLNode<E> n = getAt(index);
 
-		try {
-
-			if (index < 0 || index >= size) {
-				throw new IndexOutOfBoundsException();
-			}
-
-			if (index <= size && index >= 0) {			
-		        for (int i = 0; i <= index; i++) {
-	        		fn = fn.next;
-	        		
-    				if (i == index) {
-    					fn.next.prev = fn.prev;
-    					fn.prev.next = fn.next;
-    					fn.next = null;
-    					fn.prev = null;
-    					
-    					size--;
-    					return fn.data;
-		        	}
-		        }
-			}
-
-		} catch(Exception e) {
-			throw new IndexOutOfBoundsException();
-		}
-
-		E element = fn.data;
-
-		return element;
+        if (n.prev != null) {
+            n.prev.next = n.next;
+        } else {
+            head = n.next;
+        }
+        
+        if (n.next != null) {
+            n.next.prev = n.prev;
+        } else {
+            tail = n.prev;
+        }
+        
+        size--;
+        return n.data;
 
 	}
 
@@ -165,30 +140,41 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
-		try {
-			LLNode<E> n = new LLNode<E>(element);
-
-			LLNode<E> fn = head;
+        if (element == null) {
+            throw new NullPointerException();
+        }
 			
-			if (index < 0 || index >= size) {
-				throw new IndexOutOfBoundsException();
-			}
+        LLNode<E> thisNode = getAt(index);
 
-			if (index <= size && index >= 0) {			
-		        for (int i = 0; i <= index; i++) {
-	        		fn = fn.next;
+        LLNode<E> altNode = new LLNode(thisNode.prev, thisNode.next, element);
 
-    				if (i == index) {
-    					fn.data = element;
-		        	}
-		        }
-			}
-		} catch(Exception e) {
-			throw new IndexOutOfBoundsException();
-		}
+        if (thisNode.prev != null) {
+        	thisNode.prev.next = altNode;
+        } else {
+            head = altNode;
+        }
+        if (thisNode.next != null) {
+        	thisNode.next.prev = altNode;
+        } else {
+            tail = altNode;
+        }
+        return thisNode.data;
+	}
 
-		return element;
-	}   
+    private LLNode<E> getAt(int index) {
+    	
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        
+        LLNode<E> n = head;
+        for (int i = 0; i < index; i++) {
+            n = n.next;
+        }
+        
+        return n;
+    }
+
 }
 
 class LLNode<E> 
@@ -206,5 +192,11 @@ class LLNode<E>
 		this.prev = null;
 		this.next = null;
 	}
+
+    public LLNode(LLNode<E> prev, LLNode<E> next, E data) {
+        this.prev = prev;
+        this.next = next;
+        this.data = data;
+    }
 
 }
