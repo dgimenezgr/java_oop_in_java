@@ -2,8 +2,8 @@ package textgen;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Random;
+
 
 /** 
  * An implementation of the MTG interface that uses a list of lists.
@@ -16,6 +16,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	
 	// The starting "word"
 	private String starter;
+	private boolean trained;
 	
 	// The random number generator
 	private Random rnGenerator;
@@ -32,7 +33,31 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void train(String sourceText)
 	{
-		// TODO: Implement this method
+		// TODO: Implement this method, REWORD
+		if (trained == true) return;
+		String words[] = sourceText.split("[ ]+");
+		starter = words[0];
+		wordList.add(new ListNode(starter));
+		for (int i = 1; i< words.length; i++) {
+			ListNode prev = searchByWord(words[i-1]);
+			if (prev == null) {
+				prev = new ListNode(words[i-1]);
+				wordList.add(prev);
+				prev.addNextWord(words[i]);
+			} else {
+				prev.addNextWord(words[i]);
+			}
+		}
+		String last = words[words.length-1];
+		ListNode prev = searchByWord(last);
+		if (prev == null) {
+			prev = new ListNode(last);
+			wordList.add(prev);
+			prev.addNextWord(words[0]);
+		} else {
+			prev.addNextWord(words[0]);
+		}
+		this.trained = true;
 	}
 	
 	/** 
@@ -40,8 +65,18 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	 */
 	@Override
 	public String generateText(int numWords) {
-	    // TODO: Implement this method
-		return null;
+	    // TODO: Implement this method, REWORD
+		if (numWords < 0) return null;
+		StringBuilder output = new StringBuilder();
+		output.append("");
+		ListNode prev = searchByWord(starter);
+		if (prev == null) return null;
+		for (int i = 0; i < numWords; i++) {
+			String word = prev.getRandomNextWord(rnGenerator);
+			output.append(word+" ");
+			prev = searchByWord(word);
+		}
+		return output.toString();
 	}
 	
 	
@@ -61,10 +96,27 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	@Override
 	public void retrain(String sourceText)
 	{
-		// TODO: Implement this method.
+		// TODO: Implement this method, REWORD.
+		if (trained == false) return;
+		trained = false;
+		this.wordList = new LinkedList<ListNode>();; 
+		this.starter = "";
+		train(sourceText);
 	}
 	
 	// TODO: Add any private helper methods you need here.
+	// RENAME, REWORD
+	public ListNode searchByWord(String word)
+	{
+		if (wordList == null) return null;
+		for (ListNode node: wordList) {
+			if (node.getWord().equals(word) ){
+				return node;
+			}
+		}
+		return null;
+		
+	}
 	
 	
 	/**
@@ -141,10 +193,17 @@ class ListNode
 	
 	public String getRandomNextWord(Random generator)
 	{
-		// TODO: Implement this method
+		// TODO: Implement this method, REWORD
 	    // The random number generator should be passed from 
 	    // the MarkovTextGeneratorLoL class
+		if (nextWords.size() > 1) {
+			return nextWords.get(generator.nextInt(nextWords.size()));
+		} else if (nextWords.size() == 1) {
+			return nextWords.get(0);
+		}
+		
 	    return null;
+		
 	}
 
 	public String toString()

@@ -1,0 +1,61 @@
+1. Pregunta 1
+How much time did it take to complete the MyLinkedList project (both implementation and tester)?
+
+RESPUESTA:
+2-3 hours
+
+
+2. Pregunta 2
+How difficult would you rate the MyLinkedList assignment relative to other programming projects you've done (in and outside this course)?
+
+RESPUESTA:
+Somewhat difficult
+
+
+3. Pregunta 3
+Did you enjoy the MyLinkedList programming assignment?
+
+RESPUESTA:
+I really enjoyed the programming assignment.
+
+
+4. Pregunta 4
+Please tell us, in 1-2 sentences, what was the trickiest part for you about the MyLinkedList assignment (including either implementation or testing).
+
+RESPUESTA:
+The correct implementation of first and last nodes in relation to methods like adding to empty lists.
+
+
+5. Pregunta 5
+Did you do the optional Markov Text Generation Project?
+
+RESPUESTA:
+Yes, but didn't quite finish it or didn't get it working completely.
+
+
+6. Pregunta 6
+How long did you work on the Markov Text Generator Extension?
+
+RESPUESTA:
+2-3 hours
+
+
+7. Pregunta 7
+How difficult would you rate the Markov Text Generator extension relative to other programming projects you've done (in and outside this course)?
+
+RESPUESTA:
+Somewhat hard.
+
+
+8. Pregunta 8
+Did you enjoy the programming assignment on Markov Text Generation
+
+RESPUESTA:
+I really enjoyed the programming assingment.
+
+
+9. Pregunta 9
+Please tell us, in 1-2 sentences, what was the trickiest part for you about the Markov Text Generator extension (including either implementation or testing).
+
+RESPUESTA:
+The logic behind training, retraining and the random choice of words.
