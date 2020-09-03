@@ -3,6 +3,8 @@ package spelling;
 import java.util.List;
 import java.util.Set;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -40,7 +42,27 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
-	    return false;
+		String wordToLower = word.toLowerCase();
+		
+        if (isWord(wordToLower)) {
+            return false;
+        }
+        
+        TrieNode currentNode = root;
+        
+        for (int i = 0; i < wordToLower.length(); i++) {
+            char c = wordToLower.charAt(i);
+            if (currentNode.getChild(c) == null) {
+                currentNode = currentNode.insert(c);
+            } else {
+                currentNode = currentNode.getChild(c);
+            }
+        }
+        
+        currentNode.setEndsWord(true);
+        size++;
+
+        return true;
 	}
 	
 	/** 
@@ -50,7 +72,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
@@ -59,8 +81,19 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	@Override
 	public boolean isWord(String s) 
 	{
-	    // TODO: Implement this method
-		return false;
+        String sToLower = s.toLowerCase();
+        
+        if (sToLower.length() == 0) {
+            return false;
+        }
+
+        TrieNode thisNode = root;
+        
+        for (int i = 0; i < sToLower.length() && thisNode != null; i++) {
+            thisNode = thisNode.getChild(sToLower.charAt(i));
+        }
+        
+        return thisNode != null && thisNode.endsWord();
 	}
 
 	/** 
@@ -87,21 +120,54 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
      public List<String> predictCompletions(String prefix, int numCompletions) 
      {
     	 // TODO: Implement this method
+
+    	 String prefixToLower = prefix.toLowerCase();
+
     	 // This method should implement the following algorithm:
     	 // 1. Find the stem in the trie.  If the stem does not appear in the trie, return an
     	 //    empty list
-    	 // 2. Once the stem is found, perform a breadth first search to generate completions
+    	 
+    	 TrieNode thisNode = root;
+
+         for (int i = 0; i < prefix.length(); i++) {
+        	 thisNode = thisNode.getChild(prefix.charAt(i));
+             if (thisNode == null) {
+                 return Collections.emptyList();
+             }
+         }
+
+         List<String> completions = new LinkedList<>();
+         
+         // 2. Once the stem is found, perform a breadth first search to generate completions
     	 //    using the following algorithm:
     	 //    Create a queue (LinkedList) and add the node that completes the stem to the back
     	 //       of the list.
-    	 //    Create a list of completions to return (initially empty)
+         
+         Deque<TrieNode> thisQueue = new LinkedList<>();
+         thisQueue.add(thisNode);
+
+         //    Create a list of completions to return (initially empty)
     	 //    While the queue is not empty and you don't have enough completions:
     	 //       remove the first Node from the queue
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
     	 
-         return null;
+         List<String> thisCompletions = new LinkedList<>();
+
+         while (!thisQueue.isEmpty() && thisCompletions.size() < numCompletions) {
+             TrieNode node = thisQueue.getFirst();
+             for (Character c: node.getValidNextCharacters()) {
+            	 thisQueue.addLast(node.getChild(c));
+             }
+             if (node.endsWord()) {
+            	 thisCompletions.add(thisQueue.removeFirst().getText());
+             } else {
+            	 thisQueue.removeFirst();
+             }
+         }
+         
+         return thisCompletions;
      }
 
  	// For debugging
