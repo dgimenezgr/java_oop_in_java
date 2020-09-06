@@ -147,29 +147,35 @@ public class NearbyWords implements SpellingSuggest {
 		
 		// insert first node
 		queue.add(word);
+		
+		// This list seems to help avoid excessive run times
 		visited.add(word);
 					
 		// TODO: Implement the remainder of this method, see assignment for algorithm
-		// Start at first index.
-		int count = 0;
-		while(count < THRESHOLD && !queue.isEmpty() && retList.size() < numSuggestions) {
-			// remove head
-			String curr = queue.remove(0);
-			// find neighboring Strings (not necessarily words)
-			List<String> neighbors = distanceOne(curr, false);
-			for(String n : neighbors) {
-				if(!visited.contains(n)) {
-					// mark visited
-					visited.add(n);
-					// add to the exploration queue
-					queue.add(n);
-					// if a word (and we need more suggestions), add to suggestion list
-					if(retList.size() < numSuggestions && dict.isWord(n)) {
-						retList.add(n);
+		// While there's a word of size bigger than zero and the number of returned words is less than the number of max candidates		
+		while(!queue.isEmpty() && retList.size() < numSuggestions) {
+			// Start BFS algorithm by removing first node from the front. There's no removeFirst method so we'll just hardcode the first index.
+			String thisWord = queue.remove(0);
+			// Find all possible strings with a distance of one. For this step it doesn't need to be a word, but it has to be checked in future steps.
+			List<String> suggestions = distanceOne(thisWord, false);
+			
+			// For each suggestion string:
+			for(String suggestion : suggestions) {
+				// Check if it has been explored. If not, do:
+				if(!visited.contains(suggestion)) {
+					// Put it in the back of the queue
+					queue.add(suggestion);
+					// Add to the visited list.
+					visited.add(suggestion);
+					// If it is a word, and
+					if(dict.isWord(suggestion)) {
+						// We haven't reached the max number of needed suggestions
+						if (retList.size() < numSuggestions) {
+							retList.add(suggestion);
+						}
 					}
 				}
 			}
-			count++;
 		}
 		return retList;
 
