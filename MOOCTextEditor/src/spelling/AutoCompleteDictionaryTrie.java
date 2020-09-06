@@ -48,18 +48,20 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
             return false;
         }
         
-        TrieNode currentNode = root;
+        TrieNode thisNode = root;
         
         for (int i = 0; i < wordToLower.length(); i++) {
             char c = wordToLower.charAt(i);
-            if (currentNode.getChild(c) == null) {
-                currentNode = currentNode.insert(c);
+            
+            if (thisNode.getChild(c) == null) {
+            	thisNode = thisNode.insert(c);
             } else {
-                currentNode = currentNode.getChild(c);
+            	thisNode = thisNode.getChild(c);
             }
+            
         }
         
-        currentNode.setEndsWord(true);
+        thisNode.setEndsWord(true);
         size++;
 
         return true;
