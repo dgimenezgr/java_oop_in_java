@@ -33,11 +33,17 @@ public class NearbyWords implements SpellingSuggest {
 	 * @return list of Strings which are nearby the original string
 	 */
 	public List<String> distanceOne(String s, boolean wordsOnly )  {
-		   List<String> retList = new ArrayList<String>();
-		   insertions(s, retList, wordsOnly);
-		   substitution(s, retList, wordsOnly);
-		   deletions(s, retList, wordsOnly);
-		   return retList;
+		// Init a List<String> to hold all returning candidates. wordsOnly will force subsequent methods to
+		// return only those words which are in dictionary dict.
+	    List<String> retList = new ArrayList<String>();
+	    
+	    // Add to List all possible returning candidates from all candidate-searching methods using String s as source.
+	    insertions(s, retList, wordsOnly);
+	    substitution(s, retList, wordsOnly);
+	    deletions(s, retList, wordsOnly);
+	    
+	    // Return List.
+	    return retList;
 	}
 
 
@@ -153,9 +159,11 @@ public class NearbyWords implements SpellingSuggest {
 					
 		// TODO: Implement the remainder of this method, see assignment for algorithm
 		// While there's a word of size bigger than zero and the number of returned words is less than the number of max candidates		
-		while(!queue.isEmpty() && retList.size() < numSuggestions) {
-			// Start BFS algorithm by removing first node from the front. There's no removeFirst method so we'll just hardcode the first index.
+		while(retList.size() < numSuggestions && !queue.isEmpty()) {
+			// Start BFS algorithm by removing first node from the front. There's no method to remove the first item,
+			// so we'll just hardcode the first index.
 			String thisWord = queue.remove(0);
+			
 			// Find all possible strings with a distance of one. For this step it doesn't need to be a word, but it has to be checked in future steps.
 			List<String> suggestions = distanceOne(thisWord, false);
 			

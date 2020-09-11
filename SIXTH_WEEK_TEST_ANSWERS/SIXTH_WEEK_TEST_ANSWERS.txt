@@ -1,0 +1,83 @@
+1. Pregunta 1
+Which of the following is a reason why hash tables are a good choice for storing and retrieving data?
+
+RESPUESTA:
+They are very fast in practice for finding items in a set.
+
+
+2. Pregunta 2
+What is a "collision" in a hash table?
+
+RESPUESTA:
+When the hash function for two different items returns the same value (i.e., h(x) == h(y) for x!=y)
+
+
+3. Pregunta 3
+Which of the following is true of searching for an element in a Hash Table that is implemented using linear probing (you may assume a Hash Table that is ~70% full)?
+
+RESPUESTA:
+Average case is O(1)
+
+
+4. Pregunta 4
+When a hash table becomes too full, which of the following is required to resize the table?
+
+RESPUESTA INCORRECTA:
+Create new table, bulk copy [...].
+
+RESPUESTA:
+Create new table, individually reinsert [...].
+
+
+5. Pregunta 5
+In the algorithm for spelling suggestions in this week's assignment, there was a hash set to mark Strings as visited. What is the BEST ANSWER for why we used the visited set?
+
+RESPUESTA:
+To avoid exploring all the possible String mutations for an individual String more than once.
+
+
+6. Pregunta 6
+Which of these is an invalid word path (assume all words below are valid dictionary words)?
+
+RESPUESTA:
+From shy to chime.
+
+
+7. Pregunta 7
+How much time did you spend on the programming project this week (include time spent on the optional WordPath assignment if you did it)?
+
+RESPUESTA:
+2-3 hours.
+
+
+8. Pregunta 8
+How difficult did you find the project this week?
+
+RESPUESTA:
+Somewhat difficult
+
+
+9. Pregunta 9
+Thinking of this COURSE OVERALL. Which assignment did you enjoy the most?
+
+RESPUESTA:
+Week 3: Markov Text Generation
+
+
+10. Pregunta 10
+Thinking of this COURSE OVERALL. Which assignment are you most proud of completing?
+
+RESPUESTA:
+Week 4: Spell Check and Autocomplete.
+
+
+11. Pregunta 11
+What is the one thing you liked most about this course?
+The performance notions, specially the Big O concept. I will explore more into that and make good use of it at work.
+
+
+12. Pregunta 12
+What is the one thing you would have liked to see changed about this course?
+
+RESPUESTA:
+Nothing bothered me as much as to change it. Even the less engaging parts of this course were more than interesting.
